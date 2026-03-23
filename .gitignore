@@ -210,3 +210,4 @@ __marimo__/
 #Project Specific
 credentials.json
 /credentials.json
+Keys/Secrets/*
