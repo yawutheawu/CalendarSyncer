@@ -17,7 +17,7 @@ if __name__ == "__main__":
 
     toDF = {"Tag":[],"Task":[],"Completed?":[],"Due Date":[],"Due Time":[]}
 
-    taskFilePath = os.getenv("OBSIDIAN_TASK_FILE")
+    taskFilePath = Path(os.getenv("OBSIDIAN_TASK_FILE"))
     with open(taskFilePath, 'r') as f:
         for i in f.readlines():
             if "#" in i:
@@ -60,11 +60,17 @@ if __name__ == "__main__":
     completedDF["Due Time"] = pd.to_datetime(completedDF["Due Time"],format="%H%M",errors="coerce")
     pendingDF["Due Time"] = pd.to_datetime(pendingDF["Due Time"],format="%H%M",errors="coerce")
 
-    completedDF.sort_values(by=["Due Date","Due Time"], ascending=[True,True],inplace=True)
+    completedDF.sort_values(by=["Due Date","Due Time"], ascending=[False,False],inplace=True)
     pendingDF.sort_values(by=["Due Date","Due Time"], ascending=[True,True],inplace=True)
 
     completedDF.reset_index(inplace=True,drop=True)
     pendingDF.reset_index(inplace=True,drop=True)
-
-    print(pendingDF)
-    print(completedDF)
+    
+    nuFileContent = cnst.header + "\n" + "# Pending\n"
+    for i in pendingDF.iterrows():
+        nuFileContent += f"- [{"x" if i[1]["Completed?"] else " "}] {i[1]["Tag"]} -> {i[1]["Task"]} | Due by {i[1]["Due Date"].strftime('%m/%d/%Y') if not type(i[1]["Due Date"]) == type(pd.NaT) else "None"} at {i[1]["Due Time"].strftime('%H%M') if not type(i[1]["Due Time"]) == type(pd.NaT) else "None"}\n"
+    nuFileContent += "# Completed\n"
+    for i in completedDF.iterrows():
+        nuFileContent += f"- [{"x" if i[1]["Completed?"] else " "}] {i[1]["Tag"]} -> {i[1]["Task"]} | Due by {i[1]["Due Date"].strftime('%m/%d/%Y') if not type(i[1]["Due Date"]) == type(pd.NaT) else "None"} at {i[1]["Due Time"].strftime('%H%M') if not type(i[1]["Due Time"]) == type(pd.NaT) else "None"}\n"
+    with open(taskFilePath, 'w') as f:
+        f.write(nuFileContent)
