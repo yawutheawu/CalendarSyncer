@@ -66,7 +66,7 @@ if __name__ == "__main__":
     completedDF.reset_index(inplace=True,drop=True)
     pendingDF.reset_index(inplace=True,drop=True)
     
-    nuFileContent = cnst.header + "\n" + "# Pending\n"
+    nuFileContent = cnst.header + "# Pending\n"
     for i in pendingDF.iterrows():
         nuFileContent += f"- [{"x" if i[1]["Completed?"] else " "}] {i[1]["Tag"]} -> {i[1]["Task"]} | Due by {i[1]["Due Date"].strftime('%m/%d/%Y') if not type(i[1]["Due Date"]) == type(pd.NaT) else "None"} at {i[1]["Due Time"].strftime('%H%M') if not type(i[1]["Due Time"]) == type(pd.NaT) else "None"}\n"
     nuFileContent += "# Completed\n"
