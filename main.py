@@ -18,7 +18,7 @@ if __name__ == "__main__":
     toDF = {"Tag":[],"Task":[],"Completed?":[],"Due Date":[],"Due Time":[]}
 
     taskFilePath = Path(os.getenv("OBSIDIAN_TASK_FILE"))
-    with open(taskFilePath, 'r') as f:
+    with open(taskFilePath, 'r', encoding="utf-8") as f:
         for i in f.readlines():
             if "#" in i:
                 if i == "# Completed":
@@ -36,7 +36,7 @@ if __name__ == "__main__":
 
     toDF = {"Tag":[],"Task":[],"Completed?":[],"Due Date":[],"Due Time":[]}
 
-    with open(taskFilePath, 'r') as f:
+    with open(taskFilePath, 'r', encoding="utf-8") as f:
         completedReached = False
         for i in f.readlines():
             if "#" in i:
