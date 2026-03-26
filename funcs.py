@@ -17,7 +17,4 @@ def resetDir():
     return os.path.abspath(filePath)
 
 def generateRowIDHash(RowTextRaw : str):
-    encoded_input = RowTextRaw.encode('utf-8')
-    hash_object = hashlib.sha256(encoded_input)
-    hex_digest = hash_object.hexdigest()
-    return hex_digest
+    return hashlib.sha256(RowTextRaw.encode('utf-8')).hexdigest()
