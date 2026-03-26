@@ -1,4 +1,5 @@
 import os
+import hashlib
 
 
 def resetDir():
@@ -14,3 +15,9 @@ def resetDir():
         filePath = __file__.replace(fileName,"")
     os.chdir(filePath)
     return os.path.abspath(filePath)
+
+def generateRowIDHash(RowTextRaw : str):
+    encoded_input = RowTextRaw.encode('utf-8')
+    hash_object = hashlib.sha256(encoded_input)
+    hex_digest = hash_object.hexdigest()
+    return hex_digest

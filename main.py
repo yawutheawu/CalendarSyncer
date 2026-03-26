@@ -6,13 +6,20 @@ from dotenv import load_dotenv
 import funcs
 import constants as cnst
 
-
 if __name__ == "__main__":
     funcs.resetDir()
     os.chdir("Keys")
     os.chdir("Secrets")
     load_dotenv("Files.env")
     load_dotenv("secrets.env")
+    funcs.resetDir()
+    
+    os.chdir("Keys")
+    os.chdir("Hidden Files")
+    pendingTasklist = pd.read_csv("Pending.csv")
+    completedTasklist = pd.read_csv("Completed.csv")
+    print(pendingTasklist)
+    print(completedTasklist)
     funcs.resetDir()
 
     toDF = {"Tag":[],"Task":[],"Completed?":[],"Due Date":[],"Due Time":[]}
@@ -59,6 +66,9 @@ if __name__ == "__main__":
     pendingDF["Due Date"] = pd.to_datetime(pendingDF["Due Date"],format="%m/%d/%Y",errors="coerce")
     completedDF["Due Time"] = pd.to_datetime(completedDF["Due Time"],format="%H%M",errors="coerce")
     pendingDF["Due Time"] = pd.to_datetime(pendingDF["Due Time"],format="%H%M",errors="coerce")
+    
+    completedDF["Key"] = completedDF.apply(lambda x: funcs.generateRowIDHash(x["Tag"] + x["Task"]), axis=1)
+    pendingDF["Key"] = pendingDF.apply(lambda x: funcs.generateRowIDHash(x["Tag"] + x["Task"]), axis=1)
 
     completedDF.sort_values(by=["Due Date","Due Time"], ascending=[False,False],inplace=True)
     pendingDF.sort_values(by=["Due Date","Due Time"], ascending=[True,True],inplace=True)
@@ -74,3 +84,11 @@ if __name__ == "__main__":
         nuFileContent += f"- [{"x" if i[1]["Completed?"] else " "}] {i[1]["Tag"]} -> {i[1]["Task"]} | Due by {i[1]["Due Date"].strftime('%m/%d/%Y') if not type(i[1]["Due Date"]) == type(pd.NaT) else "None"} at {i[1]["Due Time"].strftime('%H%M') if not type(i[1]["Due Time"]) == type(pd.NaT) else "None"}\n"
     with open(taskFilePath, 'w') as f:
         f.write(nuFileContent)
+    
+    funcs.resetDir()
+    
+    os.chdir("Keys")
+    os.chdir("Hidden Files")
+    completedDF.to_csv("Completed.csv",index=False)
+    pendingDF.to_csv("Pending.csv",index=False)
+    funcs.resetDir()
