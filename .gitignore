@@ -211,4 +211,5 @@ __marimo__/
 credentials.json
 /credentials.json
 Keys/Secrets/*
-Keys/Hidden Files/*
+Keys/Hidden Files/Completed.csv
+Keys/Hidden Files/Pending.csv
