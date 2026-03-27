@@ -213,3 +213,4 @@ credentials.json
 Keys/Secrets/*
 Keys/Hidden Files/Completed.csv
 Keys/Hidden Files/Pending.csv
+Keys/Hidden Files/secretFunctions.py
