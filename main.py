@@ -60,13 +60,17 @@ if __name__ == "__main__":
 
 
     completedDF = pd.DataFrame(toDF)
+    
     completedDF = pd.concat(objs = [completedDF,pendingDF[pendingDF["Completed?"] == True]],ignore_index=True).drop_duplicates()
     pendingDF = pd.concat(objs=[pendingDF[pendingDF["Completed?"] == False],completedDF[completedDF["Completed?"] == False]],ignore_index=True).drop_duplicates()
     completedDF = completedDF[completedDF["Completed?"]==True]
+    
     completedDF = completedDF.drop_duplicates()
     pendingDF = pendingDF.drop_duplicates()
+    
     completedDF["Due Date"] = pd.to_datetime(completedDF["Due Date"],format="%m/%d/%Y",errors="coerce")
     pendingDF["Due Date"] = pd.to_datetime(pendingDF["Due Date"],format="%m/%d/%Y",errors="coerce")
+    
     completedDF["Due Time"] = pd.to_datetime(completedDF["Due Time"],format="%H%M",errors="coerce")
     pendingDF["Due Time"] = pd.to_datetime(pendingDF["Due Time"],format="%H%M",errors="coerce")
     
@@ -80,11 +84,14 @@ if __name__ == "__main__":
     pendingDF.reset_index(inplace=True,drop=True)
     
     nuFileContent = cnst.header + "# Pending\n"
+    
     for i in pendingDF.iterrows():
         nuFileContent += f"- [{"x" if i[1]["Completed?"] else " "}] {i[1]["Tag"]} -> {i[1]["Task"]} | Due by {i[1]["Due Date"].strftime('%m/%d/%Y') if not type(i[1]["Due Date"]) == type(pd.NaT) else "None"} at {i[1]["Due Time"].strftime('%H%M') if not type(i[1]["Due Time"]) == type(pd.NaT) else "None"}\n"
+    
     nuFileContent += "# Completed\n"
     for i in completedDF.iterrows():
         nuFileContent += f"- [{"x" if i[1]["Completed?"] else " "}] {i[1]["Tag"]} -> {i[1]["Task"]} | Due by {i[1]["Due Date"].strftime('%m/%d/%Y') if not type(i[1]["Due Date"]) == type(pd.NaT) else "None"} at {i[1]["Due Time"].strftime('%H%M') if not type(i[1]["Due Time"]) == type(pd.NaT) else "None"}\n"
+    
     with open(taskFilePath, 'w') as f:
         f.write(nuFileContent)
     
@@ -92,6 +99,8 @@ if __name__ == "__main__":
     
     os.chdir("Keys")
     os.chdir("Hidden Files")
+    
     completedDF.to_csv("Completed.csv",index=False)
     pendingDF.to_csv("Pending.csv",index=False)
+    
     funcs.resetDir()
