@@ -61,7 +61,10 @@ if __name__ == "__main__":
 
     completedDF = pd.DataFrame(toDF)
     completedDF = pd.concat(objs = [completedDF,pendingDF[pendingDF["Completed?"] == True]],ignore_index=True).drop_duplicates()
-    pendingDF = pendingDF[pendingDF["Completed?"] == False].drop_duplicates()
+    pendingDF = pd.concat(objs=[pendingDF[pendingDF["Completed?"] == False],completedDF[completedDF["Completed?"] == False]],ignore_index=True).drop_duplicates()
+    completedDF = completedDF[completedDF["Completed?"]==True]
+    completedDF = completedDF.drop_duplicates()
+    pendingDF = pendingDF.drop_duplicates()
     completedDF["Due Date"] = pd.to_datetime(completedDF["Due Date"],format="%m/%d/%Y",errors="coerce")
     pendingDF["Due Date"] = pd.to_datetime(pendingDF["Due Date"],format="%m/%d/%Y",errors="coerce")
     completedDF["Due Time"] = pd.to_datetime(completedDF["Due Time"],format="%H%M",errors="coerce")
