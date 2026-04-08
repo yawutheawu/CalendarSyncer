@@ -1,7 +1,6 @@
 import os
 import hashlib
 
-
 def resetDir():
     """ Sets current working directory to the folder containing the script
         (For Relative Pathing)
