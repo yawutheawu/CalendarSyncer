@@ -33,8 +33,14 @@ if __name__ == "__main__":
             else:
                 toDF["Tag"].append(i.split("->")[0].split("]")[1].strip())
                 toDF["Task"].append(i.split("->")[1].split("|")[0].strip())
-                toDF["Due Date"].append(i.split("Due by")[1].split("at")[0].strip())
-                toDF["Due Time"].append(i.split("Due by")[1].split("at")[1].strip())
+                try:
+                    toDF["Due Date"].append(i.split("Due by")[1].split("at")[0].strip())
+                except:
+                    toDF["Due Date"].append(None)
+                try:
+                    toDF["Due Time"].append(i.split("Due by")[1].split("at")[1].strip())
+                except:
+                    toDF["Due Time"].append(None)
 
                 toDF["Completed?"].append((lambda x: True if x == "x" else False)(i[3]))
 
